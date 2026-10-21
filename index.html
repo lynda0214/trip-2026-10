@@ -134,6 +134,28 @@ section{display:flex;flex-direction:column;gap:16px}
 .toc a{font-size:.85rem;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:var(--surface);color:var(--ink)}
 .toc a b{font-family:var(--f-mono);font-weight:500;margin-right:6px;color:var(--ai)}
 .toc a:hover{border-color:var(--ai)}
+/* 逐時天氣 */
+.hourly{border-top:1px dashed var(--line);padding-top:14px;display:flex;flex-direction:column;gap:6px;position:relative}
+.hourly .hd{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
+.hourly .where{font-size:.78rem;color:var(--muted)}
+.hourly svg{display:block;width:100%;height:auto;touch-action:pan-y}
+.hourly .msg{font-size:.85rem;color:var(--muted);padding:12px 0}
+.h-grid{stroke:var(--line);stroke-width:1}
+.h-ax{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+.h-ttl{fill:var(--ink);font-size:12px;font-weight:700}
+.h-temp{fill:none;stroke:var(--sun);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.h-pt{fill:var(--sun);stroke:var(--surface);stroke-width:2}
+.h-val{fill:var(--ink);font-family:var(--f-mono);font-size:11px;font-weight:500;paint-order:stroke;stroke:var(--surface);stroke-width:3px}
+.h-bar{fill:var(--rain)}
+.h-split{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.h-loc{fill:var(--muted);font-size:11px}
+.h-cross{stroke:var(--muted);stroke-width:1}
+.h-tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.8rem;line-height:1.5;box-shadow:0 2px 8px rgba(0,0,0,.12);white-space:nowrap;display:none}
+.h-tip b{font-family:var(--f-mono)}
+.hourly details{font-size:.8rem;color:var(--muted)}
+.hourly table{border-collapse:collapse;font-family:var(--f-mono);font-size:.78rem;margin-top:6px;width:100%}
+.hourly td,.hourly th{padding:2px 6px;text-align:right;border-bottom:1px solid var(--line);font-weight:400}
+.hourly .tbl{max-height:240px;overflow:auto}
 footer{font-size:.8rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
 </style>
 
@@ -141,7 +163,7 @@ footer{font-size:.8rem;color:var(--muted);display:flex;flex-direction:column;gap
 <header>
   <span class="eyebrow">2026.10.21 – 10.26 · 新宿 → 河口湖 → 伊豆高原 → 淺草 → 日暮里</span>
   <h1>六日行程地圖與穿搭</h1>
-  <p class="src">天氣依日本氣象廳 2026-10-20 17:00 發表的東京都、山梨縣、靜岡縣預報。地點用你 Trello 上釘選的 Google 地圖位置。地圖上的連線是直線示意，實際開車或搭車路線請按每天的 Google 地圖按鈕。</p>
+  <p class="src">天氣依日本氣象廳 2026-10-20 17:00 發表的東京都、山梨縣、靜岡縣預報。地點用你 Trello 上釘選的 Google 地圖位置。每天最後的逐時氣溫與降雨圖表，是開網頁時即時抓取 Open-Meteo 的預報。地圖上的連線是直線示意，實際開車或搭車路線請按每天的 Google 地圖按鈕。</p>
   <div class="callouts">
     <div class="callout warn"><b>第三、四天已對調</b><span>10/24 降雨 70%，所以大室山、城崎海岸移到 10/23；修善寺、御殿場 Outlets 改在 10/24 雨天回東京的路上。</span></div>
     <div class="callout"><b>10/22–10/24 自駕</b><span>新宿三丁目豐田租車取車，10/24 20:00 前還車。其餘三天搭電車。</span></div>
@@ -192,9 +214,12 @@ const COAST=[[35.00,139.87],[35.20,139.84],[35.38,139.92],[35.60,140.10],[35.69,
 const LAKES={kawaguchi:{c:[35.513,138.752],rx:3.6,ry:.75,rot:14,n:"河口湖"},sai:{c:[35.503,138.690],rx:2.1,ry:.5,rot:10,n:"西湖"},yamanaka:{c:[35.418,138.868],rx:2.8,ry:1.0,rot:15,n:"山中湖"}};
 const FUJI=[35.3606,138.7274];
 
+/* 逐時天氣的取樣點（地區大概位置），h 是從幾點開始用這個點 */
+const WXP={shinjuku:{p:[35.69,139.70],n:"新宿"},kawaguchi:{p:[35.51,138.76],n:"河口湖"},izu:{p:[34.90,139.11],n:"伊豆高原"},gotemba:{p:[35.31,138.96],n:"御殿場"},tokyo:{p:[35.72,139.78],n:"上野・淺草"}};
+
 /* ---------- 天數 ---------- */
 const DAYS=[
-{id:"d1",d:"10/21",w:"三",mode:"transit",title:"抵達成田，住新宿",stay:"新宿",
+{id:"d1",hr:[[0,"shinjuku"]],d:"10/21",w:"三",mode:"transit",title:"抵達成田，住新宿",stay:"新宿",
  wx:{zh:"多雲時晴，局部早晚有雨；午後西南風轉強，23 區西部強風。",jp:"くもり 時々 晴れ 所により 朝晩 雨",lo:20,hi:29,where:"東京",pop:"10–20%",rel:"短期"},
  outfit:[["上身","短袖 T 或薄襯衫，比平年熱"],["外套","薄外套（機上冷氣、夜市晚風）"],["鞋","好走的布鞋"],["帶著","摺疊傘、髮圈"]],
  stops:[
@@ -210,7 +235,7 @@ const DAYS=[
  ],
  land:[{t:"sta",p:[35.6896,139.7006],n:"新宿站",dir:"b"},{t:"sta",p:[35.6702,139.7027],n:"原宿站",dir:"r"}]
 },
-{id:"d2",d:"10/22",w:"四",mode:"drive",title:"開車到河口湖",stay:"河口湖北岸",
+{id:"d2",hr:[[0,"shinjuku"],[11,"kawaguchi"]],d:"10/22",w:"四",mode:"drive",title:"開車到河口湖",stay:"河口湖北岸",
  wx:{zh:"多雲時晴，看富士山機會不錯。河口湖海拔約 830 m，比甲府低 4–5°C。",jp:"くもり 時々 晴れ（富士五湖）／晴れ 時々 くもり（山梨県）",lo:11,hi:21,where:"河口湖（推估）",ref:"甲府 15 / 26°C",pop:"20%",rel:"短期"},
  outfit:[["上身","長袖 T，熱了可換短袖"],["外套","刷毛或針織；傍晚湖邊加輕羽絨"],["鞋","止滑運動鞋（忠靈塔約 400 階、蝙蝠洞地面濕）"],["帶著","墨鏡、防曬"]],
  drive:gm(ll(P.toyota),ll(P.ban),"driving",["新倉山浅間公園","ほうとう不動 河口湖",ll(P.herb),"大石公園","西湖コウモリ穴"]),
@@ -232,7 +257,7 @@ const DAYS=[
  ],
  land:[{t:"lake",k:"kawaguchi"},{t:"lake",k:"sai"},{t:"edge",n:"↓ 富士山方向",at:"bottom"}]
 },
-{id:"d3",d:"10/23",w:"五",mode:"drive",title:"逆富士 → 山中湖 → 大室山、城崎海岸",stay:"伊豆高原",
+{id:"d3",hr:[[0,"kawaguchi"],[12,"izu"]],d:"10/23",w:"五",mode:"drive",title:"逆富士 → 山中湖 → 大室山、城崎海岸",stay:"伊豆高原",
  wx:{zh:"山梨多雲時晴、靜岡多雲。清晨湖畔約 7–10°C；下午伊豆海邊約 22–24°C，城崎海岸風大。",jp:"くもり 時々 晴れ（山梨・信頼度A）／くもり（静岡・信頼度B）",lo:8,hi:24,where:"河口湖清晨 → 伊豆",ref:"甲府 13 / 23°C · 靜岡 16 / 24°C",pop:"30–40%",rel:"A / B"},
  outfit:[["上身","發熱衣＋長袖"],["外套","清晨輕羽絨＋防風外殼；下午只留防風外殼"],["鞋","止滑運動鞋（城崎海岸岩場）"],["帶著","毛帽、薄手套、暖暖包、腳架"]],
  drive:gm(ll(P.ban),ll(P.arts),"driving",["鳴沢氷穴",ll(P.yamanaka),"大室山リフト","城ヶ崎海岸 門脇吊橋"]),
@@ -254,7 +279,7 @@ const DAYS=[
  cluster:{hide:[5,6,7],p:P.arts,label:"5–7 伊豆高原",dir:"l"},
  zoom:{title:"伊豆高原放大",nums:[5,6,7]}
 },
-{id:"d4",d:"10/24",w:"六",mode:"drive",title:"伊東 → 修善寺 → 御殿場 → 回東京",stay:"淺草",alert:1,
+{id:"d4",hr:[[0,"izu"],[13,"gotemba"],[18,"tokyo"]],d:"10/24",w:"六",mode:"drive",title:"伊東 → 修善寺 → 御殿場 → 回東京",stay:"淺草",alert:1,
  wx:{zh:"多雲時有雨，六天中最可能下雨的一天。氣溫不低但濕冷，晚上回東京約 15°C。",jp:"くもり 時々 雨（静岡・信頼度B）／くもり 一時 雨（東京）",lo:15,hi:22,where:"伊豆 → 東京",ref:"靜岡 17 / 22°C · 東京 15 / 20°C",pop:"60–70%",rel:"B"},
  outfit:[["上身","長袖快乾上衣，避免棉質"],["外套","防潑水連帽外殼"],["鞋","防水鞋或先噴防水的鞋，帶備用襪"],["帶著","摺疊傘、輕便雨衣、塑膠袋裝濕傘"]],
  drive:gm(ll(P.arts),ll(P.toyota),"driving",[ll(P.ito),ll(P.warabi),"修禅寺","御殿場プレミアム・アウトレット"]),
@@ -274,7 +299,7 @@ const DAYS=[
  land:[{t:"peak"},{t:"sea",p:[35.10,139.35],n:"相模灣"},{t:"sea",p:[35.47,139.86],n:"東京灣"}],
  cluster:{hide:[1],p:P.ito,label:"",dir:"r"}
 },
-{id:"d5",d:"10/25",w:"日",mode:"transit",title:"換飯店、大井競馬場、谷中",stay:"日暮里",
+{id:"d5",hr:[[0,"tokyo"]],d:"10/25",w:"日",mode:"transit",title:"換飯店、大井競馬場、谷中",stay:"日暮里",
  wx:{zh:"多雲短暫雨。跳蚤市場是戶外，下雨可能取消，前一晚查主辦公告。",jp:"くもり 一時 雨（信頼度C）",lo:17,hi:22,where:"東京",pop:"50%",rel:"C"},
  outfit:[["上身","長袖 T"],["外套","薄外套"],["鞋","好走的鞋"],["帶著","摺疊傘、環保袋、零錢包（攤位多只收現金）"]],
  stops:[
@@ -290,7 +315,7 @@ const DAYS=[
  ],
  land:[{t:"sta",p:[35.6553,139.7570],n:"濱松町（轉單軌）",dir:"r"},{t:"sea",p:[35.62,139.80],n:"東京灣"}]
 },
-{id:"d6",d:"10/26",w:"一",mode:"transit",title:"上野、阿美橫丁 → 成田回台北",stay:"晚上回台北",
+{id:"d6",hr:[[0,"tokyo"]],d:"10/26",w:"一",mode:"transit",title:"上野、阿美橫丁 → 成田回台北",stay:"晚上回台北",
  wx:{zh:"多雲。回到台灣深夜約 22–24°C。",jp:"くもり（信頼度C）",lo:17,hi:24,where:"東京",pop:"40%",rel:"C"},
  outfit:[["上身","短袖或薄長袖"],["外套","薄外套（機上）"],["鞋","好走的鞋"],["帶著","摺疊傘；行動電源放隨身包"]],
  stops:[
@@ -464,9 +489,82 @@ function dayHTML(x){
         <dl class="outfit">${x.outfit.map(o=>`<div><dt>${o[0]}</dt><dd>${esc(o[1])}</dd></div>`).join("")}</dl>
       </div>
     </div>
+    <div class="hourly" id="hr-${x.id}">
+      <div class="hd"><span class="lbl">逐時氣溫與降雨機率</span><span class="where">${x.hr.map((h,i)=>(x.hr.length>1?`${h[0]}${i<x.hr.length-1?"–"+(x.hr[i+1][0]-1):""} 時 `:"")+WXP[h[1]].n).join(" → ")}</span></div>
+      <div class="msg">載入逐時預報中…</div>
+    </div>
   </article>`;
 }
 document.getElementById("map-all").innerHTML=drawOverview();
 document.getElementById("toc").innerHTML=DAYS.map(x=>`<a href="#${x.id}"><b>${x.d}</b>${x.mode==="drive"?"自駕":"電車"}・${esc(x.title.split(/[→，、]/)[0].trim())}</a>`).join("");
 document.getElementById("days").innerHTML=DAYS.map(dayHTML).join("");
+
+/* ---------- 逐時天氣（Open-Meteo，開網頁時即時抓） ---------- */
+const DATE=x=>"2026-"+x.d.replace("/","-").replace(/-(\d)$/,"-0$1");
+function hourlyChart(x,rows,W){
+  const L=34,R=12,T1=26,H1=110,T2=T1+H1+34,H2=56,H=T2+H2+24,cw=(W-L-R)/24;
+  const X=h=>L+cw*(h+.5);
+  const ts=rows.map(r=>r.t).filter(v=>v!=null);
+  let lo=Math.floor(Math.min(...ts))-1,hi=Math.ceil(Math.max(...ts))+1;
+  if(hi-lo<6){const m=(hi+lo)/2;lo=Math.floor(m-3);hi=Math.ceil(m+3)}
+  const Y=t=>T1+H1-(t-lo)/(hi-lo)*H1, YP=p=>T2+H2-p/100*H2;
+  let g=`<text class="h-ttl" x="${L}" y="${T1-12}">氣溫 °C</text><text class="h-ttl" x="${L}" y="${T2-12}">降雨機率 %</text>`;
+  const step=Math.max(2,Math.round((hi-lo)/3));
+  for(let v=Math.ceil(lo/step)*step;v<=hi;v+=step)g+=`<line class="h-grid" x1="${L}" x2="${W-R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/><text class="h-ax" x="${L-6}" y="${(Y(v)+4).toFixed(1)}" text-anchor="end">${v}</text>`;
+  [0,50,100].forEach(v=>g+=`<line class="h-grid" x1="${L}" x2="${W-R}" y1="${YP(v)}" y2="${YP(v)}"/><text class="h-ax" x="${L-6}" y="${YP(v)+4}" text-anchor="end">${v}</text>`);
+  const xs=W<420?6:3;
+  for(let h=0;h<24;h+=xs)g+=`<text class="h-ax" x="${X(h).toFixed(1)}" y="${H-6}" text-anchor="middle">${h}時</text>`;
+  // 換地點的分隔線
+  x.hr.slice(1).forEach(([h,k])=>{const sx=L+cw*h;g+=`<line class="h-split" x1="${sx}" x2="${sx}" y1="${T1-4}" y2="${T2+H2}"/><text class="h-loc" x="${sx+4}" y="${T1+8}">${WXP[k].n}</text>`});
+  rows.forEach((r,h)=>{if(r.p==null)return;const y=YP(r.p),bh=T2+H2-y;if(bh<.5)return;
+    g+=`<path class="h-bar" d="M${(X(h)-cw*.32).toFixed(1)} ${T2+H2}V${(y+Math.min(3,bh)).toFixed(1)}q0 -${Math.min(3,bh).toFixed(1)} ${Math.min(3,bh).toFixed(1)} -${Math.min(3,bh).toFixed(1)}H${(X(h)+cw*.32-Math.min(3,bh)).toFixed(1)}q${Math.min(3,bh).toFixed(1)} 0 ${Math.min(3,bh).toFixed(1)} ${Math.min(3,bh).toFixed(1)}V${T2+H2}Z"/>`;});
+  const pts=rows.map((r,h)=>r.t==null?null:[X(h),Y(r.t)]);
+  g+=`<polyline class="h-temp" points="${pts.filter(Boolean).map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ")}"/>`;
+  // 只標最高、最低溫
+  const iv=rows.map((r,h)=>[r.t,h]).filter(a=>a[0]!=null);
+  const mx=iv.reduce((a,b)=>b[0]>a[0]?b:a),mn=iv.reduce((a,b)=>b[0]<a[0]?b:a);
+  [[mx,-10],[mn,18]].forEach(([[t,h],dy])=>{const [px,py]=pts[h];
+    g+=`<circle class="h-pt" cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="4"/><text class="h-val" x="${px.toFixed(1)}" y="${(py+dy).toFixed(1)}" text-anchor="middle">${t.toFixed(0)}°</text>`});
+  g+=`<line class="h-cross" x1="0" x2="0" y1="${T1-4}" y2="${T2+H2}" style="display:none"/><rect x="${L}" y="0" width="${W-L-R}" height="${H}" fill="transparent"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${x.d} 逐時氣溫與降雨機率">${g}</svg>`;
+}
+function hourlyHover(box,rows,x,W){
+  const svg=box.querySelector("svg"),cross=svg.querySelector(".h-cross"),tip=document.createElement("div");
+  tip.className="h-tip";box.appendChild(tip);
+  const L=34,R=12,cw=(W-L-R)/24;
+  const move=e=>{const rc=svg.getBoundingClientRect(),vx=(e.clientX-rc.left)/rc.width*W;
+    const h=Math.max(0,Math.min(23,Math.floor((vx-L)/cw))),r=rows[h],cx=L+cw*(h+.5);
+    cross.setAttribute("x1",cx);cross.setAttribute("x2",cx);cross.style.display="";
+    const loc=WXP[x.hr.filter(a=>a[0]<=h).pop()[1]].n;
+    tip.innerHTML=`<b>${h}:00</b> ${loc}<br>氣溫 <b>${r.t==null?"–":r.t.toFixed(1)+"°C"}</b><br>降雨機率 <b>${r.p==null?"–":r.p+"%"}</b> · 雨量 <b>${r.mm==null?"–":r.mm.toFixed(1)+" mm"}</b>`;
+    tip.style.display="block";
+    const bx=box.getBoundingClientRect(),px=rc.left-bx.left+cx/W*rc.width,tw=tip.offsetWidth;
+    tip.style.left=Math.max(0,Math.min(bx.width-tw,px+12>bx.width-tw?px-tw-12:px+12))+"px";
+    tip.style.top=(rc.top-bx.top+20)+"px";};
+  svg.addEventListener("pointermove",move);svg.addEventListener("pointerdown",move);
+  svg.addEventListener("pointerleave",()=>{tip.style.display="none";cross.style.display="none"});
+}
+(async()=>{
+  const keys=Object.keys(WXP);
+  const url="https://api.open-meteo.com/v1/forecast?latitude="+keys.map(k=>WXP[k].p[0]).join(",")+"&longitude="+keys.map(k=>WXP[k].p[1]).join(",")+
+    "&hourly=temperature_2m,precipitation_probability,precipitation&timezone=Asia%2FTokyo&start_date="+DATE(DAYS[0])+"&end_date="+DATE(DAYS[DAYS.length-1]);
+  let data;
+  try{const r=await fetch(url);if(!r.ok)throw 0;data=await r.json();if(!Array.isArray(data))data=[data];}
+  catch(e){document.querySelectorAll(".hourly .msg").forEach(m=>m.textContent="目前抓不到逐時預報，請稍後重新整理。");return}
+  const byKey={};keys.forEach((k,i)=>byKey[k]=data[i].hourly);
+  DAYS.forEach(x=>{
+    const box=document.getElementById("hr-"+x.id),date=DATE(x);
+    const rows=[...Array(24)].map((_,h)=>{const k=x.hr.filter(a=>a[0]<=h).pop()[1],hd=byKey[k];
+      const i=hd.time.indexOf(date+"T"+String(h).padStart(2,"0")+":00");
+      return i<0?{}:{t:hd.temperature_2m[i],p:hd.precipitation_probability[i],mm:hd.precipitation[i]}});
+    if(!rows.some(r=>r.t!=null)){box.querySelector(".msg").textContent="這天的逐時預報還沒出來。";return}
+    box.querySelector(".msg").remove();
+    const plot=document.createElement("div");box.appendChild(plot);
+    // 依實際寬度畫，手機上字才不會縮小
+    const draw=()=>{const W=Math.round(plot.clientWidth)||640;if(plot.dataset.w==W)return;plot.dataset.w=W;
+      plot.querySelector(".h-tip")?.remove();plot.innerHTML=hourlyChart(x,rows,W);hourlyHover(plot,rows,x,W)};
+    plot.style.position="relative";draw();new ResizeObserver(draw).observe(plot);
+    box.insertAdjacentHTML("beforeend",`<details><summary>看每小時數字</summary><div class="tbl"><table><tr><th>時</th><th>°C</th><th>降雨 %</th><th>mm</th></tr>${rows.map((r,h)=>`<tr><td>${h}</td><td>${r.t==null?"–":r.t.toFixed(1)}</td><td>${r.p??"–"}</td><td>${r.mm==null?"–":r.mm.toFixed(1)}</td></tr>`).join("")}</table></div></details>`);
+  });
+})();
 </script>

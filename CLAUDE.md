@@ -4,6 +4,7 @@
 - 改完內容後 commit 並 push 到 `main`，約 1 分鐘後 https://lynda0214.github.io/trip-2026-10/ 會更新。
 - 行程資料都在 `index.html` 的 `<script>` 裡：`P` 是地點座標，`DAYS` 是每天的停靠點、交通、天氣、穿搭。
 - 天氣來源是氣象廳 JSON：`https://www.jma.go.jp/bosai/forecast/data/forecast/{130000|190000|220000}.json`（東京、山梨、靜岡）。更新天氣時一併改頁首和頁尾的發表時間。
+- 每天最後的逐時氣溫與降雨圖表，是瀏覽器開網頁時即時向 Open-Meteo 抓的（不用 API key），不用手動更新。取樣點在 `WXP`，每天用哪個點、幾點換點寫在 `DAYS` 的 `hr`。
 
 ## 隱私規則（網站是公開的）
 - 不寫飯店或住宿的名稱，只寫地區（例如「河口湖住宿」）。
