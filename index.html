@@ -74,6 +74,8 @@ section{display:flex;flex-direction:column;gap:16px}
 .m-lbl{fill:var(--ink);font-size:12.5px;font-weight:500;paint-order:stroke;stroke:var(--map);stroke-width:4px;stroke-linejoin:round}
 .m-scale{stroke:var(--muted);stroke-width:2;fill:none}
 .m-scale-t{fill:var(--muted);font-family:var(--f-mono);font-size:10.5px}
+.m-dur rect{fill:var(--surface);stroke:var(--ai);stroke-width:1;opacity:.95}
+.m-dur text{fill:var(--ai);font-family:var(--f-mono);font-size:10.5px;font-weight:500;text-anchor:middle;dominant-baseline:central}
 .m-edge{fill:var(--muted);font-size:11.5px;paint-order:stroke;stroke:var(--map);stroke-width:3px}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
@@ -197,13 +199,13 @@ const DAYS=[
  outfit:[["上身","短袖 T 或薄襯衫，比平年熱"],["外套","薄外套（機上冷氣、夜市晚風）"],["鞋","好走的布鞋"],["帶著","摺疊傘、髮圈"]],
  stops:[
   {n:1,t:"15:05",name:"成田機場 T2 抵達",note:"在地圖東邊約 60 km 外",off:true},
-  {go:{m:"train",txt:"JR 成田特快 N'EX 直達新宿約 80–90 分鐘；也可搭利木津巴士到新宿",link:gm("成田空港第2ターミナル","新宿駅","transit")}},
+  {go:{m:"train",dur:"85 分",txt:"JR 成田特快 N'EX 直達新宿約 80–90 分鐘；也可搭利木津巴士到新宿",link:gm("成田空港第2ターミナル","新宿駅","transit")}},
   {n:2,t:"約 17:00",name:"新宿住宿 入住",note:"新宿站西口一帶",p:P.kadoya,stay:1,s:"住宿",dir:"l"},
-  {go:{m:"walk",txt:"步行約 10 分鐘到新宿東口"}},
+  {go:{m:"walk",dur:"10 分",txt:"步行約 10 分鐘到新宿東口"}},
   {n:3,name:"Alpen 新宿旗艦店",note:"B2F–3F 戶外用品，可補保暖衣或雨具",p:P.alpen,s:"Alpen",dir:"t"},
   {n:"A",name:"晚餐候選：餃子の福包",note:"新宿三丁目一帶",p:P.fukuho,alt:1,noroute:1,s:"福包",dir:"r"},
   {n:"B",name:"晚餐候選：牛たん あら",note:"新宿西口",p:P.ara,alt:1,noroute:1,s:"牛たん あら",dir:"b"},
-  {go:{m:"train",txt:"JR 山手線新宿到原宿 2 站約 5 分鐘，出站步行約 10 分鐘",link:gm("新宿駅","代々木公園イベント広場","transit")}},
+  {go:{m:"train",dur:"20 分",txt:"JR 山手線新宿到原宿 2 站約 5 分鐘，出站步行約 10 分鐘",link:gm("新宿駅","代々木公園イベント広場","transit")}},
   {n:4,t:"22:00 前",name:"代代木公園 東京夜市",note:"回程原宿搭山手線回新宿",p:P.yoyogi,s:"代代木公園",dir:"r"}
  ],
  land:[{t:"sta",p:[35.6896,139.7006],n:"新宿站",dir:"b"},{t:"sta",p:[35.6702,139.7027],n:"原宿站",dir:"r"}]
@@ -215,17 +217,17 @@ const DAYS=[
  offnote:"新宿在地圖外，東邊約 90 km",
  stops:[
   {n:1,t:"10:00",name:"豐田租車 新宿三丁目站前店 取車",note:"從新宿西口約 1 km，帶行李建議計程車",off:true},
-  {go:{m:"drive",txt:"中央道到河口湖 IC，約 1.5–2 小時"}},
+  {go:{m:"drive",dur:"1.5–2 小時",txt:"中央道到河口湖 IC，約 1.5–2 小時"}},
   {n:2,name:"新倉山淺間公園・忠靈塔",note:"約 400 階樓梯，拍五重塔＋富士山",p:P.chureito,s:"忠靈塔",dir:"r"},
-  {go:{m:"drive",txt:"約 15 分鐘"}},
+  {go:{m:"drive",dur:"15 分",txt:"約 15 分鐘"}},
   {n:3,name:"不動茶屋（ほうとう午餐）",p:P.fudo,s:"不動茶屋",dir:"b"},
-  {go:{m:"drive",txt:"約 10 分鐘"}},
+  {go:{m:"drive",dur:"10 分",txt:"約 10 分鐘"}},
   {n:4,name:"Herb Garden 旅日記 富士河口湖",p:P.herb,s:"旅日記",dir:"r"},
-  {go:{m:"drive",txt:"沿湖約 15 分鐘"}},
+  {go:{m:"drive",dur:"15 分",txt:"沿湖約 15 分鐘"}},
   {n:5,name:"大石公園",note:"北岸湖邊拍富士山",p:P.oishi,s:"大石公園",dir:"t"},
-  {go:{m:"drive",txt:"約 15 分鐘"}},
+  {go:{m:"drive",dur:"15 分",txt:"約 15 分鐘"}},
   {n:6,name:"西湖蝙蝠洞",note:"洞內涼、地面濕滑；最後入洞時間請查官網",p:P.bat,s:"蝙蝠洞",dir:"b"},
-  {go:{m:"drive",txt:"約 20 分鐘"}},
+  {go:{m:"drive",dur:"20 分",txt:"約 20 分鐘"}},
   {n:7,name:"河口湖住宿 入住",note:"晚餐飯店火鍋",p:P.ban,stay:1,s:"住宿",dir:"t"}
  ],
  land:[{t:"lake",k:"kawaguchi"},{t:"lake",k:"sai"},{t:"edge",n:"↓ 富士山方向",at:"bottom"}]
@@ -237,15 +239,15 @@ const DAYS=[
  stops:[
   {n:1,t:"5:20–6:30",name:"住宿附近湖畔看逆富士",note:"整趟最冷的時段",p:P.ban,stay:1,s:"逆富士",dir:"t"},
   {n:2,t:"8:00",name:"飯店早餐、退房",off:true,same:1},
-  {go:{m:"drive",txt:"約 20 分鐘"}},
+  {go:{m:"drive",dur:"20 分",txt:"約 20 分鐘"}},
   {n:3,t:"9:00",name:"鳴澤冰穴（選配）",note:"洞內約 0°C，穿羽絨進去",p:P.ice,alt:1,s:"鳴澤冰穴",dir:"l"},
-  {go:{m:"drive",txt:"約 40 分鐘"}},
+  {go:{m:"drive",dur:"40 分",txt:"約 40 分鐘"}},
   {n:4,name:"山中湖：平野之濱、明神山 Panorama 台",note:"看富士山與山中湖",p:P.yamanaka,s:"山中湖",dir:"r"},
-  {go:{m:"drive",txt:"經御殿場、新東名、伊豆縱貫道，約 1 小時 45 分",via:[[35.30,138.94],[35.10,138.93]]}},
+  {go:{m:"drive",dur:"1 小時 45 分",txt:"經御殿場、新東名、伊豆縱貫道，約 1 小時 45 分",via:[[35.30,138.94],[35.10,138.93]]}},
   {n:5,name:"大室山",note:"登山吊椅強風會停駛，最後上山時間請查官網",p:P.omuro,s:"大室山",dir:"l"},
-  {go:{m:"drive",txt:"約 15 分鐘"}},
+  {go:{m:"drive",dur:"15 分",txt:"約 15 分鐘"}},
   {n:6,name:"城崎海岸・門脇吊橋",note:"岩場與吊橋風大",p:P.jogasaki,s:"城崎海岸",dir:"r"},
-  {go:{m:"drive",txt:"約 10 分鐘"}},
+  {go:{m:"drive",dur:"10 分",txt:"約 10 分鐘"}},
   {n:7,name:"伊豆高原住宿 入住",p:P.arts,stay:1,s:"住宿",dir:"b"}
  ],
  land:[{t:"lake",k:"kawaguchi"},{t:"lake",k:"sai"},{t:"lake",k:"yamanaka"},{t:"peak"},{t:"sta",p:[35.30,138.94],n:"御殿場",dir:"l"},{t:"sea",p:[35.05,139.30],n:"相模灣"},{t:"sea",p:[34.90,138.65],n:"駿河灣"}],
@@ -258,15 +260,15 @@ const DAYS=[
  drive:gm(ll(P.arts),ll(P.toyota),"driving",[ll(P.ito),ll(P.warabi),"修禅寺","御殿場プレミアム・アウトレット"]),
  stops:[
   {n:1,name:"伊豆高原住宿 退房",p:P.arts,stay:1,s:"住宿",dir:"b"},
-  {go:{m:"drive",txt:"約 10 分鐘"}},
+  {go:{m:"drive",dur:"10 分",txt:"約 10 分鐘"}},
   {n:2,name:"伊東：Kohiiya Bizu Futo 咖啡、門藤 蕨餅",note:"兩家相距約 2 km",p:P.ito,s:"伊東",dir:"r"},
-  {go:{m:"drive",txt:"約 45 分鐘"}},
+  {go:{m:"drive",dur:"45 分",txt:"約 45 分鐘"}},
   {n:3,name:"修善寺（選配）",note:"竹林小徑、溫泉街，下雨撐傘也能逛",p:P.shuzenji,alt:1,s:"修善寺",dir:"l"},
-  {go:{m:"drive",txt:"伊豆縱貫道、新東名約 1 小時"}},
+  {go:{m:"drive",dur:"1 小時",txt:"伊豆縱貫道、新東名約 1 小時"}},
   {n:4,name:"御殿場 Premium Outlets",note:"16:30 前離開；週六東名往東京方向傍晚常塞車",p:P.gotemba,s:"御殿場 Outlets",dir:"l"},
-  {go:{m:"drive",txt:"東名高速約 1.5–2.5 小時"}},
+  {go:{m:"drive",dur:"1.5–2.5 小時",txt:"東名高速約 1.5–2.5 小時"}},
   {n:5,t:"20:00 前",name:"豐田租車 新宿三丁目 還車",p:P.toyota,s:"還車",dir:"b"},
-  {go:{m:"taxi",txt:"帶行李建議計程車約 30 分鐘；電車：都營新宿線到馬喰橫山，轉都營淺草線到淺草，約 35 分鐘",link:gm("新宿三丁目駅",ll(P.nono),"transit")}},
+  {go:{m:"taxi",dur:"30 分",txt:"帶行李建議計程車約 30 分鐘；電車：都營新宿線到馬喰橫山，轉都營淺草線到淺草，約 35 分鐘",link:gm("新宿三丁目駅",ll(P.nono),"transit")}},
   {n:6,name:"淺草住宿 入住",p:P.nono,stay:1,s:"淺草住宿",dir:"r"}
  ],
  land:[{t:"peak"},{t:"sea",p:[35.10,139.35],n:"相模灣"},{t:"sea",p:[35.47,139.86],n:"東京灣"}],
@@ -277,13 +279,13 @@ const DAYS=[
  outfit:[["上身","長袖 T"],["外套","薄外套"],["鞋","好走的鞋"],["帶著","摺疊傘、環保袋、零錢包（攤位多只收現金）"]],
  stops:[
   {n:1,name:"淺草住宿 退房",p:P.nono,stay:1,s:"淺草住宿",dir:"r"},
-  {go:{m:"taxi",txt:"帶行李搭計程車約 15 分鐘",link:gm(ll(P.nono),ll(P.almont),"driving")}},
+  {go:{m:"taxi",dur:"15 分",txt:"帶行李搭計程車約 15 分鐘",link:gm(ll(P.nono),ll(P.almont),"driving")}},
   {n:2,name:"日暮里住宿 寄放行李",note:"入住前寄放，先跟飯店確認",p:P.almont,stay:1,s:"日暮里住宿（2・5）",dir:"r"},
-  {go:{m:"train",txt:"JR 山手線或京濱東北線到濱松町，轉東京單軌電車到大井競馬場前，約 40 分鐘",link:gm("日暮里駅","大井競馬場前駅","transit"),via:[[35.6553,139.7570]]}},
+  {go:{m:"train",dur:"40 分",txt:"JR 山手線或京濱東北線到濱松町，轉東京單軌電車到大井競馬場前，約 40 分鐘",link:gm("日暮里駅","大井競馬場前駅","transit"),via:[[35.6553,139.7570]]}},
   {n:3,t:"上午",name:"大井競馬場 跳蚤市場",note:"通常 9:00 開始，上午最熱鬧；雨天可能取消",p:P.oi,s:"大井競馬場",dir:"r"},
-  {go:{m:"train",txt:"單軌電車回濱松町，JR 到日暮里，步行約 5 分鐘",link:gm("大井競馬場前駅","谷中銀座","transit"),via:[[35.6553,139.7570]]}},
+  {go:{m:"train",dur:"40 分",txt:"單軌電車回濱松町，JR 到日暮里，步行約 5 分鐘",link:gm("大井競馬場前駅","谷中銀座","transit"),via:[[35.6553,139.7570]]}},
   {n:4,t:"傍晚",name:"谷中銀座・夕陽階梯",p:P.yanaka,s:"谷中銀座",dir:"l"},
-  {go:{m:"walk",txt:"步行約 5 分鐘"}},
+  {go:{m:"walk",dur:"5 分",txt:"步行約 5 分鐘"}},
   {n:5,name:"日暮里住宿 入住",note:"晚餐：一頭牛燒肉 房家（日暮里站旁）。晚上洗衣、整理行李",same:2}
  ],
  land:[{t:"sta",p:[35.6553,139.7570],n:"濱松町（轉單軌）",dir:"r"},{t:"sea",p:[35.62,139.80],n:"東京灣"}]
@@ -293,13 +295,13 @@ const DAYS=[
  outfit:[["上身","短袖或薄長袖"],["外套","薄外套（機上）"],["鞋","好走的鞋"],["帶著","摺疊傘；行動電源放隨身包"]],
  stops:[
   {n:1,name:"日暮里住宿 早餐、退房、寄放行李",p:P.almont,stay:1,s:"日暮里住宿（1・4）",dir:"r"},
-  {go:{m:"walk",txt:"JR 日暮里到上野 2 站；或步行約 20 分鐘穿過谷中墓園",link:gm(ll(P.almont),"上野恩賜公園","walking")}},
+  {go:{m:"walk",dur:"20 分",txt:"JR 日暮里到上野 2 站；或步行約 20 分鐘穿過谷中墓園",link:gm(ll(P.almont),"上野恩賜公園","walking")}},
   {n:2,name:"上野公園",note:"東京國立博物館週一休館，這天只逛公園",p:P.ueno,s:"上野公園",dir:"r"},
-  {go:{m:"walk",txt:"步行約 10 分鐘"}},
+  {go:{m:"walk",dur:"10 分",txt:"步行約 10 分鐘"}},
   {n:3,name:"阿美橫丁 最後採買",p:P.ameyoko,s:"阿美橫丁",dir:"r"},
-  {go:{m:"train",txt:"JR 上野到日暮里 2 站"}},
+  {go:{m:"train",dur:"10 分",txt:"JR 上野到日暮里 2 站"}},
   {n:4,t:"17:00 前",name:"回飯店拿行李",same:1},
-  {go:{m:"train",txt:"京成 Skyliner 日暮里到成田機場 T2 約 40 分鐘",link:gm("日暮里駅","成田空港第2ターミナル","transit")}},
+  {go:{m:"train",dur:"40 分",txt:"京成 Skyliner 日暮里到成田機場 T2 約 40 分鐘",link:gm("日暮里駅","成田空港第2ターミナル","transit")}},
   {n:5,t:"傍晚",name:"成田機場，搭機回台北",off:true}
  ],
  land:[{t:"edge",n:"成田機場 → 東邊約 60 km",at:"right"}]
@@ -353,17 +355,40 @@ function drawMap(day,opt={}){
     if(l.t==="edge"&&!opt.nums){g+=l.at==="bottom"?`<text class="m-edge" x="${W/2}" y="${H-12}" text-anchor="middle">${l.n}</text>`:`<text class="m-edge" x="${W-14}" y="22" text-anchor="end">${l.n}</text>`;}
   });
   // 路線：依序連接非候選的停靠點，交通方式取自前一段 go
-  let prev=null,mode="drive",via=[];const segs=[];
+  let prev=null,mode="drive",via=[],dur="";const segs=[];
   day.stops.forEach(s=>{
-    if(s.go){mode=s.go.m;via=s.go.via||[];return}
+    if(s.go){mode=s.go.m;via=s.go.via||[];dur=s.go.dur||"";return}
     const pt=s.p||(s.same?day.stops.find(x=>x.n===s.same).p:null);
     if(!pt||s.noroute)return;
-    if(prev)segs.push({a:prev,b:pt,m:mode,via});
-    prev=pt;via=[];
+    if(prev)segs.push({a:prev,b:pt,m:mode,via,dur});
+    prev=pt;via=[];dur="";
   });
   segs.forEach(sg=>{
     const pts=[sg.a,...sg.via,sg.b].map(p=>proj(p));
     g+=`<polyline class="m-route ${sg.m}" points="${pts.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ")}"/>`;
+    sg.pts=pts;
+  });
+  // 通勤時長：標在每段路線長度的中點，太短或在畫面外的段不標
+  const tw=(t,cj,as)=>[...t].reduce((a,c)=>a+(c.charCodeAt(0)>255?cj:as),0);
+  const durs=[],boxes=[];
+  stops.forEach(s=>{const [x,y]=proj(s.p),r=opt.r||10.5;boxes.push([x,y,2*r,2*r]);
+    if(!s.s)return;const w=tw(s.s,12.5,7.5),o=r+5;
+    boxes.push(s.dir==="l"?[x-o-w/2,y,w,16]:s.dir==="t"?[x,y-o-6,w,16]:s.dir==="b"?[x,y+o+6,w,16]:[x+o+w/2,y,w,16]);});
+  segs.forEach(sg=>{
+    if(!sg.dur)return;
+    const ls=sg.pts.slice(1).map((p,i)=>Math.hypot(p[0]-sg.pts[i][0],p[1]-sg.pts[i][1]));
+    const tot=ls.reduce((a,b)=>a+b,0);
+    if(tot<70)return;
+    const w=tw(sg.dur,10.5,6.4)+10;
+    const at=f=>{let d=tot*f,i=0;while(i<ls.length-1&&d>ls[i]){d-=ls[i];i++}
+      const [ax,ay]=sg.pts[i],[bx,by]=sg.pts[i+1],t=ls[i]?d/ls[i]:0;return [ax+(bx-ax)*t,ay+(by-ay)*t]};
+    // 依序試幾個位置，避開畫面邊緣、點位和已放的標籤
+    const ok=([x,y])=>x-w/2>4&&x+w/2<W-4&&y>12&&y<H-12&&
+      !boxes.some(b=>Math.abs(b[0]-x)<(b[2]+w)/2+3&&Math.abs(b[1]-y)<(b[3]+17)/2+3);
+    const pos=[.5,.38,.62,.28,.72].map(at).find(ok);
+    if(!pos)return;
+    const [x,y]=pos;boxes.push([x,y,w,17]);
+    durs.push(`<g class="m-dur"><rect x="${(x-w/2).toFixed(1)}" y="${(y-8.5).toFixed(1)}" width="${w.toFixed(1)}" height="17" rx="8.5"/><text x="${x.toFixed(1)}" y="${y.toFixed(1)}">${esc(sg.dur)}</text></g>`);
   });
   const hide=(!opt.nums&&day.cluster)?day.cluster.hide:[];
   const r=opt.r||10.5;
@@ -379,6 +404,7 @@ function drawMap(day,opt={}){
     const [x,y]=proj(day.cluster.p);
     g+=`<circle class="m-dot" cx="${x}" cy="${y}" r="6"/>`+labelAt(x,y,day.cluster.dir,day.cluster.label,6);
   }
+  g+=durs.join("");
   g+=scaleBar(proj,W,H);
   g+=`<text class="m-scale-t" x="16" y="22">N ↑</text>`;
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(day.d+" "+(opt.title||day.title))} 路線圖">${g}</svg>`;
@@ -389,18 +415,18 @@ function drawOverview(){
   const ov={d:"全程",title:"全程路線",land:[{t:"peak"},{t:"lake",k:"kawaguchi"},{t:"lake",k:"yamanaka"},{t:"sea",p:[35.10,139.35],n:"相模灣"},{t:"sea",p:[35.47,139.86],n:"東京灣"},{t:"sea",p:[34.85,138.62],n:"駿河灣"}],
    stops:[
     {n:"成",p:P.narita,s:"成田機場",dir:"l"},
-    {go:{m:"train"}},{n:"1",p:P.kadoya,stay:1,s:"10/21 新宿",dir:"l"},
-    {go:{m:"drive"}},{n:"2",p:P.ban,stay:1,s:"10/22 河口湖",dir:"t"},
-    {go:{m:"drive"}},{n:"·",p:P.yamanaka,s:"山中湖",dir:"r"},
-    {go:{m:"drive",via:[[35.30,138.94],[35.10,138.93]]}},{n:"·",p:P.omuro,s:"大室山",dir:"l"},
-    {go:{m:"drive"}},{n:"3",p:P.arts,stay:1,s:"10/23 伊豆高原",dir:"r"},
-    {go:{m:"drive"}},{n:"·",p:P.shuzenji,s:"修善寺",dir:"l"},
-    {go:{m:"drive"}},{n:"·",p:P.gotemba,s:"御殿場",dir:"r"},
-    {go:{m:"drive"}},{p:P.toyota,hidden:1},
-    {go:{m:"train"}},{n:"4",p:P.nono,stay:1,s:"10/24 淺草・10/25 日暮里",dir:"t"},
-    {go:{m:"train"}},{n:"·",p:P.oi,s:"大井競馬場",dir:"r"},
-    {go:{m:"train"}},{p:P.almont,hidden:1},
-    {go:{m:"train"}},{p:P.narita,hidden:1}
+    {go:{m:"train",dur:"85 分"}},{n:"1",p:P.kadoya,stay:1,s:"10/21 新宿",dir:"l"},
+    {go:{m:"drive",dur:"2 小時"}},{n:"2",p:P.ban,stay:1,s:"10/22 河口湖",dir:"t"},
+    {go:{m:"drive",dur:"40 分"}},{n:"·",p:P.yamanaka,s:"山中湖",dir:"r"},
+    {go:{m:"drive",dur:"1 小時 45 分",via:[[35.30,138.94],[35.10,138.93]]}},{n:"·",p:P.omuro,s:"大室山",dir:"l"},
+    {go:{m:"drive",dur:"25 分"}},{n:"3",p:P.arts,stay:1,s:"10/23 伊豆高原",dir:"r"},
+    {go:{m:"drive",dur:"55 分"}},{n:"·",p:P.shuzenji,s:"修善寺",dir:"l"},
+    {go:{m:"drive",dur:"1 小時"}},{n:"·",p:P.gotemba,s:"御殿場",dir:"r"},
+    {go:{m:"drive",dur:"1.5–2.5 小時"}},{p:P.toyota,hidden:1},
+    {go:{m:"train",dur:"30 分"}},{n:"4",p:P.nono,stay:1,s:"10/24 淺草・10/25 日暮里",dir:"t"},
+    {go:{m:"train",dur:"55 分"}},{n:"·",p:P.oi,s:"大井競馬場",dir:"r"},
+    {go:{m:"train",dur:"40 分"}},{p:P.almont,hidden:1},
+    {go:{m:"train",dur:"40 分"}},{p:P.narita,hidden:1}
    ]};
   return drawMap(ov,{W:720,H:440,pad:50,r:9});
 }
