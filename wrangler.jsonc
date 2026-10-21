@@ -1,0 +1,6 @@
+{
+  // Cloudflare Workers 只發布靜態檔 index.html
+  "name": "trip-2026-10",
+  "compatibility_date": "2026-09-01",
+  "assets": { "directory": "." }
+}
